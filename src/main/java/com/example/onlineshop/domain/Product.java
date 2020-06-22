@@ -1,6 +1,8 @@
 package com.example.onlineshop.domain;
 
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

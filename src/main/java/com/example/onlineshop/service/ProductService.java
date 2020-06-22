@@ -23,7 +23,6 @@ public class ProductService {
     }
 
     public Product createProduct(SaveProductRequest request) {
-        // todo: replace with logger
 
         LOOGER.info("Creating product {}", request);
 
