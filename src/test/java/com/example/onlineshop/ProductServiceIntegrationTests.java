@@ -25,6 +25,10 @@ class ProductServiceIntegrationTests {
     private ProductService productService;
 
     @Test
+    void createProduct_whenValidRequest_ThenReturnCreatedProduct(){
+        createProduct();
+    }
+    @Test
     void getProduct_whenExistingProduct_thenReturnProduct() {
 
         Product product = createProduct();
@@ -39,6 +43,8 @@ class ProductServiceIntegrationTests {
         assertThat(response.getDescription(), is(product.getDescription()));
         assertThat(response.getImageUrl(), is(product.getImageUrl()));
     }
+
+
 
     @Test
     void getProduct_whenNonExistingProduct_thenThrowResourceNotFoundException() {
@@ -73,6 +79,20 @@ class ProductServiceIntegrationTests {
                 () -> productService.getProduct(product.getId()));
     }
 
+
+
+    @Test
+    void createProduct_whenMissingMandatoryProperties_thenThrowException() {
+        SaveProductRequest request = new SaveProductRequest();
+
+        try {
+            productService.createProduct(request);
+        } catch (Exception e) {
+            assertThat("Unexpected exception thrown", e instanceof ConstraintViolationException);
+        }
+    }
+
+
     private Product createProduct() {
         SaveProductRequest request = new SaveProductRequest();
         request.setName("Phone");
@@ -93,15 +113,4 @@ class ProductServiceIntegrationTests {
 
     }
 
-
-    @Test
-    void createProduct_whenMissingMandatoryProperties_thenThrowException() {
-        SaveProductRequest request = new SaveProductRequest();
-
-        try {
-            productService.createProduct(request);
-        } catch (Exception e) {
-            assertThat("Unexpected exception thrown", e instanceof ConstraintViolationException);
-        }
-    }
 }

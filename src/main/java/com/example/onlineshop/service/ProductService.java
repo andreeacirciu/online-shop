@@ -3,11 +3,15 @@ package com.example.onlineshop.service;
 import com.example.onlineshop.domain.Product;
 import com.example.onlineshop.exception.ResourceNotFoundException;
 import com.example.onlineshop.persistence.ProductRepository;
+import com.example.onlineshop.transfer.GetProductRequest;
 import com.example.onlineshop.transfer.SaveProductRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -56,6 +60,20 @@ public class ProductService {
                 //lambda expression
                 .orElseThrow( () -> new ResourceNotFoundException("Product " + id + " not found."));
     }
+
+    public Page<Product> getProducts(GetProductRequest request, Pageable pageable) {
+        if (request.getPartialName() != null && request.getMinimumQuantity() != null) {
+            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(
+                    request.getPartialName(), request.getMinimumQuantity(), pageable);
+
+        } else if (request.getPartialName() != null) {
+            return productRepository.findByNameContaining(request.getPartialName(), pageable);
+
+        } else {
+            return productRepository.findAll(pageable);
+        }
+    }
+
 
     public Product updateProduct(long id, SaveProductRequest request){
         LOOGER.info("Updating product {} : {}", id, request);
