@@ -1,5 +1,7 @@
 package com.example.onlineshop.transfer;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.NotNull;
 
 public class SaveProductRequest {
@@ -9,6 +11,7 @@ public class SaveProductRequest {
     @NotNull
     private double price;
     private String imageUrl;
+    @Range(min =0)
     @NotNull
     private int quantity;
 
