@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //JPQL syntax - java persistence query languages
     // @Query(value = "SELECT * FROM product", nativeQuery = true) //se poate si asa dar folosim mai jos JPQL
     @Query(value = "SELECT product FROM Product product WHERE " +
-            "( :partialName IS null OR product.name = :partialName) AND " +
+            "( :partialName IS null OR product.name LIKE %:partialName%) AND " +
             "(:minimumQuantity IS null OR product.quantity >= :minimumQuantity)")
 
     Page<Product> findByOptionalCriteria(String partialName, Integer minimumQuantity, Pageable pageable);

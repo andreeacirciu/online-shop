@@ -41,10 +41,10 @@ public class ProductService {
         product.setQuantity(request.getQuantity());
         product.setImageUrl(request.getImageUrl());
 
-       return productRepository.save(product);
+        return productRepository.save(product);
     }
 
-    public Product getProduct(long id){
+    public Product getProduct(long id) {
         LOOGER.info("Retrieving product {}", id);
 
 //        Optional<Product> productOptional = productRepository.findById(id);
@@ -58,24 +58,26 @@ public class ProductService {
         //egal cu ce e mai sus
         return productRepository.findById(id)
                 //lambda expression
-                .orElseThrow( () -> new ResourceNotFoundException("Product " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Product " + id + " not found."));
     }
 
     public Page<Product> getProducts(GetProductRequest request, Pageable pageable) {
-        if (request.getPartialName() != null && request.getMinimumQuantity() != null) {
-            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(
-                    request.getPartialName(), request.getMinimumQuantity(), pageable);
-
-        } else if (request.getPartialName() != null) {
-            return productRepository.findByNameContaining(request.getPartialName(), pageable);
-
-        } else {
-            return productRepository.findAll(pageable);
-        }
+//        if (request.getPartialName() != null && request.getMinimumQuantity() != null) {
+//            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(
+//                    request.getPartialName(), request.getMinimumQuantity(), pageable);
+//
+//        } else if (request.getPartialName() != null) {
+//            return productRepository.findByNameContaining(request.getPartialName(), pageable);
+//
+//        } else {
+//            return productRepository.findAll(pageable);
+//        }
+      
+        return productRepository.findByOptionalCriteria(request.getPartialName(), request.getMinimumQuantity(), pageable);
     }
 
 
-    public Product updateProduct(long id, SaveProductRequest request){
+    public Product updateProduct(long id, SaveProductRequest request) {
         LOOGER.info("Updating product {} : {}", id, request);
 
         Product product = getProduct(id);
@@ -85,7 +87,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public void deleteProduct(long id){
+    public void deleteProduct(long id) {
         LOOGER.info("Deleting product {}", id);
         productRepository.deleteById(id);
     }

@@ -3,18 +3,21 @@ package com.example.onlineshop;
 import com.example.onlineshop.domain.Product;
 import com.example.onlineshop.exception.ResourceNotFoundException;
 import com.example.onlineshop.service.ProductService;
+import com.example.onlineshop.transfer.GetProductRequest;
 import com.example.onlineshop.transfer.SaveProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import javax.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.*;
 
 
 @SpringBootTest
@@ -25,9 +28,10 @@ class ProductServiceIntegrationTests {
     private ProductService productService;
 
     @Test
-    void createProduct_whenValidRequest_ThenReturnCreatedProduct(){
+    void createProduct_whenValidRequest_ThenReturnCreatedProduct() {
         createProduct();
     }
+
     @Test
     void getProduct_whenExistingProduct_thenReturnProduct() {
 
@@ -45,7 +49,6 @@ class ProductServiceIntegrationTests {
     }
 
 
-
     @Test
     void getProduct_whenNonExistingProduct_thenThrowResourceNotFoundException() {
         Assertions.assertThrows(ResourceNotFoundException.class,
@@ -53,7 +56,7 @@ class ProductServiceIntegrationTests {
     }
 
     @Test
-    void updateProduct_whenValidRequest_thenReturnUpdatedProduct(){
+    void updateProduct_whenValidRequest_thenReturnUpdatedProduct() {
         Product product = createProduct();
 
         SaveProductRequest request = new SaveProductRequest();
@@ -69,8 +72,9 @@ class ProductServiceIntegrationTests {
         assertThat(updatedProduct.getPrice(), is(request.getPrice()));
         assertThat(updatedProduct.getQuantity(), is(request.getQuantity()));
     }
+
     @Test
-    void deleteProduct_whenExistingProduct_thenProductDoesNotExistAnymore(){
+    void deleteProduct_whenExistingProduct_thenProductDoesNotExistAnymore() {
         Product product = createProduct();
 
         productService.deleteProduct(product.getId());
@@ -78,7 +82,6 @@ class ProductServiceIntegrationTests {
         Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> productService.getProduct(product.getId()));
     }
-
 
 
     @Test
@@ -92,6 +95,15 @@ class ProductServiceIntegrationTests {
         }
     }
 
+    @Test
+    void getProducts_whenOneExistingProduct_thenReturnPageOfOneProduct() {
+        Product product = createProduct();
+        Page<Product> productsPage = productService.getProducts(new GetProductRequest(), PageRequest.of(0, 1000));
+
+        assertThat(productsPage, notNullValue());
+        assertThat(productsPage.getTotalElements(), greaterThanOrEqualTo(1L));
+        assertThat(productsPage.getContent(), contains(product));
+    }
 
     private Product createProduct() {
         SaveProductRequest request = new SaveProductRequest();
