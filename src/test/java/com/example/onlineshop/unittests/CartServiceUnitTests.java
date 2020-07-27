@@ -45,6 +45,7 @@ public class CartServiceUnitTests {
     @Test
     public void addProductsToCart_whenNewUser_thenNoErrorsIsThrown(){
 
+
         when(cartRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         User user = new User();
