@@ -7,6 +7,8 @@ import com.example.onlineshop.steps.ProductTestSteps;
 import com.example.onlineshop.steps.UserTestSteps;
 import com.example.onlineshop.transfer.cart.AddProductsToCartRequest;
 import com.example.onlineshop.transfer.cart.CartResponse;
+import com.example.onlineshop.transfer.product.ProductResponse;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -28,11 +30,11 @@ public class CartServiceIntegrationTests {
     @Autowired
     private ProductTestSteps productTestSteps;
 
-
+    @Test
     public void addProductsToCart_whenNewUser_thenCreateCartForUser() {
         User user = userTestSteps.createUser();
 
-        Product product = productTestSteps.createProduct();
+        ProductResponse product = productTestSteps.createProduct();
         AddProductsToCartRequest request = new AddProductsToCartRequest();
         request.setProductIds(Collections.singletonList(product.getId()));
 

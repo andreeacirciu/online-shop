@@ -4,6 +4,7 @@ package com.example.onlineshop.web;
 import com.example.onlineshop.domain.Product;
 import com.example.onlineshop.service.ProductService;
 import com.example.onlineshop.transfer.product.GetProductRequest;
+import com.example.onlineshop.transfer.product.ProductResponse;
 import com.example.onlineshop.transfer.product.SaveProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,30 +28,30 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody SaveProductRequest request) {
-        Product product = productService.createProduct(request);
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody SaveProductRequest request) {
+        ProductResponse product = productService.createProduct(request);
 
         return new ResponseEntity<>(product, HttpStatus.CREATED);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable long id, @Valid @RequestBody SaveProductRequest request){
-        Product product = productService.updateProduct(id, request);
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable long id, @Valid @RequestBody SaveProductRequest request){
+        ProductResponse product = productService.updateProduct(id, request);
 
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getProducts(@Valid GetProductRequest request, Pageable pageable) {
-        Page<Product> products = productService.getProducts(request, pageable);
+    public ResponseEntity<Page<ProductResponse>>getProducts(@Valid GetProductRequest request, Pageable pageable) {
+        Page<ProductResponse> products = productService.getProducts(request, pageable);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable long id){
-        Product product = productService.getProduct(id);
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable long id){
+        ProductResponse product = productService.getProductResponse(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
 
     }

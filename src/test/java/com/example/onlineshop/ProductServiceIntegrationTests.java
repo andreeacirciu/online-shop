@@ -5,6 +5,7 @@ import com.example.onlineshop.exception.ResourceNotFoundException;
 import com.example.onlineshop.service.ProductService;
 import com.example.onlineshop.steps.ProductTestSteps;
 import com.example.onlineshop.transfer.product.GetProductRequest;
+import com.example.onlineshop.transfer.product.ProductResponse;
 import com.example.onlineshop.transfer.product.SaveProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class ProductServiceIntegrationTests {
     @Test
     void getProduct_whenExistingProduct_thenReturnProduct() {
 
-        Product product = productTestSteps.createProduct();
+        ProductResponse product = productTestSteps.createProduct();
 
         Product response = productService.getProduct(product.getId());
 
@@ -62,14 +63,14 @@ class ProductServiceIntegrationTests {
 
     @Test
     void updateProduct_whenValidRequest_thenReturnUpdatedProduct() {
-        Product product = productTestSteps.createProduct();
+        ProductResponse product = productTestSteps.createProduct();
 
         SaveProductRequest request = new SaveProductRequest();
         request.setName(product.getName() + "Updated");
         request.setPrice(product.getPrice() + 10);
         request.setQuantity(product.getQuantity() + 10);
 
-        Product updatedProduct = productService.updateProduct(product.getId(), request);
+        ProductResponse updatedProduct = productService.updateProduct(product.getId(), request);
 
         assertThat(updatedProduct, notNullValue());
         assertThat(updatedProduct.getId(), is(product.getId()));
@@ -80,7 +81,7 @@ class ProductServiceIntegrationTests {
 
     @Test
     void deleteProduct_whenExistingProduct_thenProductDoesNotExistAnymore() {
-        Product product = productTestSteps.createProduct();
+        ProductResponse product = productTestSteps.createProduct();
 
         productService.deleteProduct(product.getId());
 
@@ -102,14 +103,12 @@ class ProductServiceIntegrationTests {
 
     @Test
     void getProducts_whenOneExistingProduct_thenReturnPageOfOneProduct() {
-        Product product = productTestSteps.createProduct();
-        Page<Product> productsPage = productService.getProducts(new GetProductRequest(), PageRequest.of(0, 1000));
+        ProductResponse product = productTestSteps.createProduct();
+        Page<ProductResponse> productsPage = productService.getProducts(new GetProductRequest(), PageRequest.of(0, 1000));
 
         assertThat(productsPage, notNullValue());
         assertThat(productsPage.getTotalElements(), greaterThanOrEqualTo(1L));
-        assertThat(productsPage.getContent(), contains(product));
+        assertThat(productsPage.getContent().get(0).getId(), is(product.getId()));
     }
-
-
 
 }

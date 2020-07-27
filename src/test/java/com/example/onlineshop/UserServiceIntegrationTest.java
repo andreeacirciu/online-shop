@@ -31,6 +31,7 @@ public class UserServiceIntegrationTest {
         userTestSteps.createUser();
 
     }
+    @Test
     public void getUser_whenExistingUser_thenReturnUser(){
         User user = userTestSteps.createUser();
 

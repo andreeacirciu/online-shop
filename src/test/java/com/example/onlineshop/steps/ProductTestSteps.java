@@ -3,7 +3,9 @@ package com.example.onlineshop.steps;
 
 import com.example.onlineshop.domain.Product;
 import com.example.onlineshop.service.ProductService;
+import com.example.onlineshop.transfer.product.ProductResponse;
 import com.example.onlineshop.transfer.product.SaveProductRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,14 +20,14 @@ public class ProductTestSteps {
     private ProductService productService;
 
 
-    public Product createProduct() {
+    public ProductResponse createProduct() {
         SaveProductRequest request = new SaveProductRequest();
         request.setName("Phone");
         request.setPrice(500);
         request.setQuantity(1000);
 
 
-        Product product = productService.createProduct(request);
+        ProductResponse product = productService.createProduct(request);
 
         //assertion
         assertThat(product, notNullValue());
